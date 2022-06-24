@@ -20,10 +20,18 @@ export default class App extends React.Component {
 
   onIncrement = () => {
     this.setState({
-      counter: this.state.counter + 0.1,
+      counter: this.state.counter + 0.01,
     })
     my_counter= this.state.counter
-    // alert("Hello World");
+   
+  };
+
+  onDecrement = () => {
+    this.setState({
+      counter: this.state.counter - 0.01,
+    })
+    my_counter= this.state.counter
+    
   };
   
   render () {
@@ -48,13 +56,19 @@ export default class App extends React.Component {
       <View style={styles.container}>
         { shape }
         <Text>Counter: { counter }</Text>
-        <StatusBar style="auto" />
-        <View>
+        <StatusBar  style="auto" />
+        <View style={styles.button}>
           <Button
-            title='Click me'
-            color='#f194ff'
-            backgroundColor='red'
+            title='Grow'
+            
             onPress={this.onIncrement}
+          />
+        </View>
+        <View style={styles.button}>
+          <Button
+            title='Shrink'
+            
+            onPress={this.onDecrement}
           />
         </View>
       </View>
@@ -121,5 +135,16 @@ const styles = StyleSheet.create({
   cube: {
     width: 500,
     height: 500,
+  },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: 'black',
+    marginHorizontal: 20,
+    marginTop: 5
   }
 });
