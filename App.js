@@ -7,72 +7,10 @@ import ExpoTHREE,{Renderer} from 'expo-three';
 import { ExpoWebGLRenderingContext,GLView } from "expo-gl";
 //import {GTLFLoader} from './threeJs_master/examples/jsm/loaders/GLTFLoader'
 //import * as THREE from 'three'
-/*const App=() => { 
 
-  
 
-  const onContextCreate=async (gl)=>{
-    //THREEJS CODE
-    const scene= new Scene() 
-    const camera= new PerspectiveCamera(75,gl.drawingBufferWidth/gl.drawingBufferHeight,0.1,1000)
-    gl.canvas={width:gl.drawingBufferWidth,height:gl.drawingBufferHeight}
-    camera.position.z=2
-    const renderer=new Renderer({gl})
-    renderer.setSize(gl.drawingBufferWidth,gl.drawingBufferHeight)
-    
-    const geometry=new BoxBufferGeometry(1,1,1)
-    const material= new MeshBasicMaterial({color:'green'})
-    const cube=new Mesh(geometry,material)
 
-    scene.add(cube)
-
-    
-//event listener
-let counter=1
-let factor
-const afterClick= () =>{
-  counter+=0.01
-  factor=counter
-  cube.scale.set(factor,factor,factor)
-  //sleep(1000)
-
-}
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-  
-   const render=() =>{
-
-      requestAnimationFrame(render)
-      cube.rotation.x +=0.01
-      cube.rotation.y +=0.01
-
-      renderer.render(scene,camera)
-      gl.endFrameEXP()
-    } 
-    render()
-  
-  
-  return (
-    <View>
-    
-    <GLView
-          onContextCreate={onContextCreate}
-          style={{width:500,height:500}}
-    />
-    <View>
-
-<Text> hello world</Text>
-
-<Button title="GROW" onPress={this.}></Button>
-    </View>   
-    </View>     
-  )
-
-}
-}
-export default App  
-*/
+let my_counter;
 export default class App extends React.Component {
 
   constructor () {
@@ -84,6 +22,7 @@ export default class App extends React.Component {
     this.setState({
       counter: this.state.counter + 0.1,
     })
+    my_counter= this.state.counter
     // alert("Hello World");
   };
   
@@ -91,7 +30,7 @@ export default class App extends React.Component {
     const counter = this.state.counter;
     let shape;
     if (counter <= 5) {
-      shape = Cube(counter)
+      shape = <Cube/>
     }
 
     // switch (counter) {
@@ -124,7 +63,7 @@ export default class App extends React.Component {
 }
 
 
-const Cube = (factor) => {
+const Cube = () => {
   const onContextCreate = (gl) => {
     // threejs code
     const scene = new Scene();
@@ -145,14 +84,14 @@ const Cube = (factor) => {
     pointLight.position.set(5,5,5);
     scene.add(pointLight);
    
-   cube.scale.set(factor,factor,factor)
+   
 
     const render = ()=>{
       requestAnimationFrame(render)
 
       cube.rotation.x += 0.01;
       cube.rotation.y += 0.01;
-
+      cube.scale.set(my_counter,my_counter,my_counter)
       renderer.render(scene, camera);
       gl.endFrameEXP();
     }
