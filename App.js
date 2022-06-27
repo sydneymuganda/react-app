@@ -2,7 +2,7 @@ import React from "react";
 import {View, Text, Button,StyleSheet} from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import Expo  from "expo";
-import { Scene, MeshStandardMaterial, PointLight,  Mesh, MeshBasicMaterial ,PerspectiveCamera, BoxBufferGeometry, Color  } from "three";
+import { Scene, MeshStandardMaterial, PointLight,  Mesh, MeshBasicMaterial ,PerspectiveCamera, BoxBufferGeometry, Color ,SphereGeometry, ConeGeometry } from "three";
 import ExpoTHREE,{Renderer} from 'expo-three';
 import { ExpoWebGLRenderingContext,GLView } from "expo-gl";
 //import {GTLFLoader} from './threeJs_master/examples/jsm/loaders/GLTFLoader'
@@ -16,6 +16,7 @@ export default class App extends React.Component {
   constructor () {
     super();
     this.state = { counter: 1}
+    my_counter=1;
   }
 
   onIncrement = () => {
@@ -33,25 +34,24 @@ export default class App extends React.Component {
     my_counter= this.state.counter
     
   };
+
+  
+   
   
   render () {
-    const counter = this.state.counter;
+    const counter = my_counter;
     let shape;
-    if (counter <= 5) {
+    if (counter <= 1.1) {
       shape = <Cube/>
     }
+    else if (counter > 1.1 && counter < 1.2 ) {
+      shape = <Sphere/>
+    }
+   else  if (counter >= 1.2) {
+      shape = <Cone/>
+    }
 
-    // switch (counter) {
-    //   case (counter > 5):
-    //     shape = <Sphere/>;
-    //     break;
-    //   case (counter > 10):
-    //     shape = <Cone/>;
-    //     break;
-    //   default:
-    //     shape = <Cube/>;
-    // }
-
+    
     return (
       <View style={styles.container}>
         { shape }
@@ -120,7 +120,89 @@ const Cube = () => {
     />
   );
 }
+const Sphere = () => {
+  const onContextCreate = (gl) => {
+    // threejs code
+    const scene = new Scene();
+    const camera = new PerspectiveCamera(75, gl.drawingBufferWidth/gl.drawingBufferHeight, 0.1, 1000);
 
+    gl.canvas = {width: gl.drawingBufferWidth, height: gl.drawingBufferHeight};
+    camera.position.z = 40;
+
+    const renderer = new Renderer({gl});
+    renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
+    
+    const geometry = new SphereGeometry( 15, 32, 16 );
+    const material = new MeshStandardMaterial({color: 'green'});
+    const sphere = new Mesh(geometry, material);
+    scene.add(sphere);
+
+    const pointLight = new PointLight(0xffffff, 0.5);
+    pointLight.position.set(5,5,5);
+    scene.add(pointLight);
+
+    const render = ()=>{
+      requestAnimationFrame(render)
+
+      sphere.rotation.x += 0.01;
+      sphere.rotation.y += 0.01;
+      sphere.scale.set(my_counter,my_counter,my_counter)
+      renderer.render(scene, camera);
+      gl.endFrameEXP();
+    }
+
+    render();
+  } 
+
+  return (
+    <GLView
+      onContextCreate = {onContextCreate}
+      style = {styles.cube}
+    />
+  );
+}
+
+const Cone = () => {
+  const onContextCreate = (gl) => {
+    // threejs code
+    const scene = new Scene();
+    const camera = new PerspectiveCamera(75, gl.drawingBufferWidth/gl.drawingBufferHeight, 0.1, 1000);
+
+    gl.canvas = {width: gl.drawingBufferWidth, height: gl.drawingBufferHeight};
+    camera.position.z = 40;
+
+    const renderer = new Renderer({gl});
+    renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
+    
+    const geometry = new ConeGeometry( 5, 20, 32 );
+    const material = new MeshStandardMaterial({color: 'yellow'});
+    const cone = new Mesh(geometry, material);
+    scene.add(cone);
+
+    const pointLight = new PointLight(0xffffff, 0.5);
+    pointLight.position.set(5,5,5);
+    scene.add(pointLight);
+
+    const render = ()=>{
+      requestAnimationFrame(render)
+
+      cone.rotation.x += 0.01;
+      cone.rotation.y += 0.01;
+      cone.scale.set(my_counter,my_counter,my_counter)
+      renderer.render(scene, camera);
+      gl.endFrameEXP();
+    }
+
+    render();
+  } 
+
+  return (
+    <GLView
+      onContextCreate = {onContextCreate}
+      style = {styles.cube}
+    />
+  );
+}
 
 
 
